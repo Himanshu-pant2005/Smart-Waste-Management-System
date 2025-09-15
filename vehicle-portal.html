@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Dashboard - Smart Waste Management System</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">
+                    <i class="fas fa-recycle"></i>
+                    <span>Smart Waste</span>
+                </a>
+            </div>
+            <div class="hamburger">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="citizen-portal.html">Citizen Portal</a></li>
+                    <li><a href="admin-portal.html">Admin Portal</a></li>
+                    <li><a href="vehicle-portal.html" class="active">Vehicle Dashboard</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="vehicle-portal">
+        <div class="container">
+            <section class="portal-header">
+                <h1>Vehicle Dashboard</h1>
+                <p>Manage assigned complaints and update their resolution status</p>
+            </section>
+
+            <div class="portal-content">
+                <section class="vehicle-info-section">
+                    <div class="card">
+                        <div class="vehicle-profile">
+                            <div class="vehicle-avatar">
+                                <i class="fas fa-truck"></i>
+                            </div>
+                            <div class="vehicle-details">
+                                <h2>Vehicle-103</h2>
+                                <p class="status busy">Status: Busy</p>
+                                <p>Driver: John Doe</p>
+                                <p>Contact: +91 9876543210</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="map-section">
+                    <div class="card">
+                        <h2>Navigation Map</h2>
+                        <div id="map" style="height: 400px;"></div>
+                    </div>
+                </section>
+
+                <section class="assigned-complaints-section">
+                    <h2>Assigned Complaints</h2>
+                    <div id="assigned-complaints">
+                        <!-- Assigned complaints will be loaded here via JavaScript -->
+                    </div>
+                </section>
+
+                <section class="resolved-complaints-section">
+                    <div class="card">
+                        <h2>Recently Resolved</h2>
+                        <div class="resolved-list">
+                            <div class="resolved-item">
+                                <div class="resolved-info">
+                                    <h3>Complaint #3</h3>
+                                    <p>Waste scattered on street corner</p>
+                                    <p>Resolved on: 2023-07-12</p>
+                                </div>
+                                <div class="resolved-images">
+                                    <div class="before-after">
+                                        <div class="image-container">
+                                            <span>Before</span>
+                                            <img src="images/garbage3.jpg" alt="Before" onerror="this.src='images/placeholder.jpg'">
+                                        </div>
+                                        <div class="image-container">
+                                            <span>After</span>
+                                            <img src="images/resolved1.jpg" alt="After" onerror="this.src='images/placeholder.jpg'">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Smart Waste Management</h3>
+                    <p>A solution for efficient waste management and cleaner cities.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="citizen-portal.html">Citizen Portal</a></li>
+                        <li><a href="admin-portal.html">Admin Portal</a></li>
+                        <li><a href="vehicle-portal.html">Vehicle Dashboard</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <p><i class="fas fa-envelope"></i> contact@smartwaste.com</p>
+                    <p><i class="fas fa-phone"></i> +91 1234567890</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Smart Waste Management System. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

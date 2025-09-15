@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citizen Portal - Smart Waste Management System</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">
+                    <i class="fas fa-recycle"></i>
+                    <span>Smart Waste</span>
+                </a>
+            </div>
+            <div class="hamburger">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="citizen-portal.html" class="active">Citizen Portal</a></li>
+                    <li><a href="admin-portal.html">Admin Portal</a></li>
+                    <li><a href="vehicle-portal.html">Vehicle Dashboard</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="citizen-portal">
+        <div class="container">
+            <section class="portal-header">
+                <h1>Citizen Complaint Portal</h1>
+                <p>Report waste management issues in your area and track their resolution status</p>
+            </section>
+
+            <div class="portal-content">
+                <section class="complaint-form-section">
+                    <div class="card">
+                        <h2>Submit New Complaint</h2>
+                        <form id="complaint-form">
+                            <div class="form-group">
+                                <label for="complaint-description">Describe the Issue:</label>
+                                <textarea id="complaint-description" rows="4" required placeholder="Describe the waste management issue in detail..."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Location:</label>
+                                <div class="location-inputs">
+                                    <input type="number" id="latitude" placeholder="Latitude" step="0.0001" required>
+                                    <input type="number" id="longitude" placeholder="Longitude" step="0.0001" required>
+                                    <button type="button" id="get-location" class="btn secondary">
+                                        <i class="fas fa-map-marker-alt"></i> Get Current Location
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="complaint-photo">Upload Photo:</label>
+                                <input type="file" id="complaint-photo" accept="image/*" required>
+                            </div>
+                            
+                            <div class="form-group map-container">
+                                <label>Verify on Map:</label>
+                                <div id="map" style="height: 300px;"></div>
+                            </div>
+                            
+                            <button type="submit" class="btn primary">Submit Complaint</button>
+                        </form>
+                    </div>
+                </section>
+
+                <section class="my-complaints-section">
+                    <h2>My Complaints</h2>
+                    <div id="my-complaints">
+                        <!-- Complaints will be loaded here via JavaScript -->
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Smart Waste Management</h3>
+                    <p>A solution for efficient waste management and cleaner cities.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="citizen-portal.html">Citizen Portal</a></li>
+                        <li><a href="admin-portal.html">Admin Portal</a></li>
+                        <li><a href="vehicle-portal.html">Vehicle Dashboard</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <p><i class="fas fa-envelope"></i> contact@smartwaste.com</p>
+                    <p><i class="fas fa-phone"></i> +91 1234567890</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Smart Waste Management System. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
