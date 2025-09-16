@@ -1,14 +1,18 @@
-<!DOCTYPE html>
+css/<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vehicle Dashboard - Smart Waste Management System</title>
-    <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style4.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/complaints.css">
+    <script src="script.js"></script>
 </head>
 <body>
+    <!-- HEADER -->
     <header>
         <div class="container">
             <div class="logo">
@@ -33,30 +37,74 @@
         </div>
     </header>
 
+    <!-- MAIN -->
     <main class="vehicle-portal">
         <div class="container">
             <section class="portal-header">
                 <h1>Vehicle Dashboard</h1>
-                <p>Manage assigned complaints and update their resolution status</p>
+                <p>Monitor all vehicles, their drivers, and statuses in real-time</p>
             </section>
 
             <div class="portal-content">
+                <!-- VEHICLE LIST -->
                 <section class="vehicle-info-section">
-                    <div class="card">
-                        <div class="vehicle-profile">
-                            <div class="vehicle-avatar">
-                                <i class="fas fa-truck"></i>
+                    <h2>All Vehicles</h2>
+                    <div class="vehicle-grid">
+                        <!-- Vehicle 101 -->
+                        <div class="card">
+                            <div class="vehicle-profile">
+                                <div class="vehicle-avatar"><i class="fas fa-truck"></i></div>
+                                <div class="vehicle-details">
+                                    <h2>Vehicle-101</h2>
+                                    <p class="status available">Status: Available</p>
+                                    <p>Driver: Ramesh Singh</p>
+                                    <p>Contact: +91 9876500001</p>
+                                </div>
                             </div>
-                            <div class="vehicle-details">
-                                <h2>Vehicle-103</h2>
-                                <p class="status busy">Status: Busy</p>
-                                <p>Driver: John Doe</p>
-                                <p>Contact: +91 9876543210</p>
+                        </div>
+
+                        <!-- Vehicle 102 -->
+                        <div class="card">
+                            <div class="vehicle-profile">
+                                <div class="vehicle-avatar"><i class="fas fa-truck"></i></div>
+                                <div class="vehicle-details">
+                                    <h2>Vehicle-102</h2>
+                                    <p class="status maintenance">Status: Under Maintenance</p>
+                                    <p>Driver: Priya Sharma</p>
+                                    <p>Contact: +91 9876500002</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Vehicle 103 -->
+                        <div class="card">
+                            <div class="vehicle-profile">
+                                <div class="vehicle-avatar"><i class="fas fa-truck"></i></div>
+                                <div class="vehicle-details">
+                                    <h2>Vehicle-103</h2>
+                                    <p class="status busy">Status: Busy</p>
+                                    <p>Driver: John Doe</p>
+                                    <p>Contact: +91 9876543210</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Vehicle 104 -->
+                        <div class="card">
+                            <div class="vehicle-profile">
+                                <div class="vehicle-avatar"><i class="fas fa-truck"></i></div>
+                                <div class="vehicle-details">
+                                    <h2>Vehicle-104</h2>
+                                    <p class="status available">Status: Available</p>
+                                    <p>Driver: Anjali Verma</p>
+                                    <p>Contact: +91 9876500004</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </section>
 
+                <!-- MAP -->
                 <section class="map-section">
                     <div class="card">
                         <h2>Navigation Map</h2>
@@ -64,13 +112,15 @@
                     </div>
                 </section>
 
+                <!-- ASSIGNED COMPLAINTS -->
                 <section class="assigned-complaints-section">
                     <h2>Assigned Complaints</h2>
                     <div id="assigned-complaints">
-                        <!-- Assigned complaints will be loaded here via JavaScript -->
+                        <!-- Loaded dynamically via JS -->
                     </div>
                 </section>
 
+                <!-- RESOLVED COMPLAINTS -->
                 <section class="resolved-complaints-section">
                     <div class="card">
                         <h2>Recently Resolved</h2>
@@ -79,17 +129,17 @@
                                 <div class="resolved-info">
                                     <h3>Complaint #3</h3>
                                     <p>Waste scattered on street corner</p>
-                                    <p>Resolved on: 2023-07-12</p>
+                                    <p>Resolved on: 2025-09-15</p>
                                 </div>
                                 <div class="resolved-images">
                                     <div class="before-after">
                                         <div class="image-container">
                                             <span>Before</span>
-                                            <img src="images/garbage3.jpg" alt="Before" onerror="this.src='images/placeholder.jpg'">
+                                            <img src="images/garbage3.jpg" alt="Before" onerror="this.onerror = null;">
                                         </div>
                                         <div class="image-container">
                                             <span>After</span>
-                                            <img src="images/resolved1.jpg" alt="After" onerror="this.src='images/placeholder.jpg'">
+                                            <img src="images/resolved1.jpg" alt="After" onerror="this.onerror = null;">
                                         </div>
                                     </div>
                                 </div>
@@ -101,6 +151,7 @@
         </div>
     </main>
 
+    <!-- FOOTER -->
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -124,11 +175,12 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2023 Smart Waste Management System. All rights reserved.</p>
+                <p>&copy; 2025 Smart Waste Management System. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
+    <!-- JS -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="js/script.js"></script>
 </body>

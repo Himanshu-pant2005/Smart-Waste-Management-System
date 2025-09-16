@@ -1,15 +1,20 @@
-// Mobile Navigation Toggle
-document.addEventListener('DOMContentLoaded', function() {
+// ============================
+// GLOBAL INITIALIZATION
+// ============================
+document.addEventListener('DOMContentLoaded', () => {
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
 
     if (hamburger) {
-        hamburger.addEventListener('click', function() {
-            navLinks.classList.toggle('active');
+        hamburger.addEventListener('click', () => navLinks.classList.toggle('active'));
+
+        // Close menu on nav link click (mobile UX)
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => navLinks.classList.remove('active'));
         });
     }
 
-    // Dummy data for complaints
+    // Dummy Complaints Data
     window.complaintData = [
         {
             id: 1,
@@ -40,323 +45,286 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     ];
 
-    // Dummy data for vehicles
+    // Dummy Vehicle Data
     window.vehicleData = [
-        {
-            id: "Vehicle-101",
-            location: { lat: 28.6159, lng: 77.2110 },
-            status: "available"
-        },
-        {
-            id: "Vehicle-102",
-            location: { lat: 28.6259, lng: 77.2150 },
-            status: "busy"
-        },
-        {
-            id: "Vehicle-103",
-            location: { lat: 28.6200, lng: 77.2180 },
-            status: "busy"
-        }
+        { id: "Vehicle-101", driver: "Ramesh Singh", phone: "+91 9876500001", location: { lat: 28.6159, lng: 77.2110 }, status: "available" },
+        { id: "Vehicle-102", driver: "Priya Sharma", phone: "+91 9876500002", location: { lat: 28.6259, lng: 77.2150 }, status: "busy" },
+        { id: "Vehicle-103", driver: "John Doe", phone: "+91 9876543210", location: { lat: 28.6200, lng: 77.2180 }, status: "busy" },
+        { id: "Vehicle-104", driver: "Anjali Verma", phone: "+91 9876500004", location: { lat: 28.6300, lng: 77.2220 }, status: "maintenance" }
     ];
 
-    // Initialize map if it exists on the page
-    const mapContainer = document.getElementById('map');
-    if (mapContainer) {
-        initMap();
-    }
+    // Initialize correct portal
+    if (document.querySelector('.citizen-portal')) initCitizenPortal();
+    if (document.querySelector('.admin-portal')) initAdminPortal();
+    if (document.querySelector('.vehicle-portal')) initVehiclePortal();
 
-    // Initialize forms and tables based on the current page
-    if (document.querySelector('.citizen-portal')) {
-        initCitizenPortal();
-    } else if (document.querySelector('.admin-portal')) {
-        initAdminPortal();
-    } else if (document.querySelector('.vehicle-portal')) {
-        initVehiclePortal();
-    }
+    // Initialize map if present
+    if (document.getElementById('map')) initMap();
+
+    // Init animations & scroll effects
+    initScrollAnimations();
+
+    // Add Scroll to Top Button
+    initScrollToTop();
 });
 
-// Initialize Map
+// ============================
+// MAP INITIALIZATION
+// ============================
 function initMap() {
     const map = L.map('map').setView([28.6139, 77.2090], 13);
-    
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Add complaint markers
-    if (window.complaintData) {
-        window.complaintData.forEach(complaint => {
-            const markerColor = complaint.status === 'pending' ? 'red' : 
-                               complaint.status === 'assigned' ? 'orange' : 'green';
-            
-            const marker = L.marker([complaint.location.lat, complaint.location.lng])
-                .addTo(map)
-                .bindPopup(`<b>Complaint #${complaint.id}</b><br>${complaint.description}<br>Status: ${complaint.status}`);
-        });
-    }
+    // Complaints Markers
+    window.complaintData.forEach(c => {
+        const color = c.status === 'pending' ? 'red' : c.status === 'assigned' ? 'orange' : 'green';
+        L.marker([c.location.lat, c.location.lng], {
+            icon: L.divIcon({
+                className: 'complaint-marker',
+                html: `<i class="fas fa-trash" style="color:${color};"></i>`,
+                iconSize: [30, 30]
+            })
+        }).addTo(map).bindPopup(`<b>Complaint #${c.id}</b><br>${c.description}<br>Status: ${c.status}`);
+    });
 
-    // Add vehicle markers
-    if (window.vehicleData) {
-        window.vehicleData.forEach(vehicle => {
-            const marker = L.marker([vehicle.location.lat, vehicle.location.lng], {
-                icon: L.divIcon({
-                    className: 'vehicle-marker',
-                    html: '<i class="fas fa-truck" style="color: #16A34A;"></i>',
-                    iconSize: [30, 30]
-                })
-            }).addTo(map)
-            .bindPopup(`<b>${vehicle.id}</b><br>Status: ${vehicle.status}`);
-        });
-    }
+    // Vehicles Markers
+    window.vehicleData.forEach(v => {
+        const statusColor = v.status === "available" ? "#16A34A" : v.status === "busy" ? "#E67E22" : "#E74C3C";
+        L.marker([v.location.lat, v.location.lng], {
+            icon: L.divIcon({
+                className: 'vehicle-marker',
+                html: `<i class="fas fa-truck" style="color:${statusColor};"></i>`,
+                iconSize: [30, 30]
+            })
+        }).addTo(map).bindPopup(`<b>${v.id}</b><br>Driver: ${v.driver}<br>Status: ${v.status}`);
+    });
 
     return map;
 }
 
-// Citizen Portal Functions
+// ============================
+// CITIZEN PORTAL
+// ============================
 function initCitizenPortal() {
-    // Display user complaints
     displayUserComplaints();
-    
-    // Handle complaint form submission
-    const complaintForm = document.getElementById('complaint-form');
-    if (complaintForm) {
-        complaintForm.addEventListener('submit', function(e) {
+
+    const form = document.getElementById('complaint-form');
+    if (form) {
+        form.addEventListener('submit', e => {
             e.preventDefault();
-            
             const description = document.getElementById('complaint-description').value;
-            const latitude = document.getElementById('latitude').value;
-            const longitude = document.getElementById('longitude').value;
-            
-            // Create new complaint
+            const lat = parseFloat(document.getElementById('latitude').value);
+            const lng = parseFloat(document.getElementById('longitude').value);
+
             const newComplaint = {
                 id: window.complaintData.length + 1,
-                description: description,
-                location: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
+                description,
+                location: { lat, lng },
                 status: "pending",
-                photo: "images/new-complaint.jpg", // Placeholder
+                photo: "images/new-complaint.jpg",
                 date: new Date().toISOString().split('T')[0]
             };
-            
-            // Add to data
             window.complaintData.unshift(newComplaint);
-            
-            // Update display
             displayUserComplaints();
-            
-            // Reset form
-            complaintForm.reset();
-            
-            // Show success message
-            alert('Complaint submitted successfully!');
+            form.reset();
+            notify("Complaint submitted successfully ✅");
         });
     }
 
-    // Get current location button
     const locationBtn = document.getElementById('get-location');
     if (locationBtn) {
-        locationBtn.addEventListener('click', function() {
+        locationBtn.addEventListener('click', () => {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    document.getElementById('latitude').value = position.coords.latitude;
-                    document.getElementById('longitude').value = position.coords.longitude;
+                navigator.geolocation.getCurrentPosition(pos => {
+                    document.getElementById('latitude').value = pos.coords.latitude;
+                    document.getElementById('longitude').value = pos.coords.longitude;
                 });
             } else {
-                alert('Geolocation is not supported by this browser.');
+                notify("Geolocation not supported ❌", true);
             }
         });
     }
 }
 
 function displayUserComplaints() {
-    const complaintsContainer = document.getElementById('my-complaints');
-    if (!complaintsContainer) return;
-    
-    let html = '';
-    
-    window.complaintData.forEach(complaint => {
-        const statusClass = complaint.status.toLowerCase();
-        html += `
-            <div class="card complaint-card">
-                <div class="complaint-header">
-                    <h3>Complaint #${complaint.id}</h3>
-                    <span class="status ${statusClass}">${complaint.status}</span>
-                </div>
-                <div class="complaint-body">
-                    <div class="complaint-image">
-                        <img src="${complaint.photo}" alt="Complaint Photo" onerror="this.src='images/placeholder.jpg'">
-                    </div>
-                    <div class="complaint-details">
-                        <p><strong>Description:</strong> ${complaint.description}</p>
-                        <p><strong>Date:</strong> ${complaint.date}</p>
-                        <p><strong>Location:</strong> ${complaint.location.lat.toFixed(4)}, ${complaint.location.lng.toFixed(4)}</p>
-                        ${complaint.assignedTo ? `<p><strong>Assigned To:</strong> ${complaint.assignedTo}</p>` : ''}
-                        ${complaint.resolvedDate ? `<p><strong>Resolved Date:</strong> ${complaint.resolvedDate}</p>` : ''}
-                    </div>
+    const container = document.getElementById('my-complaints');
+    if (!container) return;
+
+    container.innerHTML = window.complaintData.map(c => `
+        <div class="card complaint-card hidden">
+            <div class="complaint-header">
+                <h3>Complaint #${c.id}</h3>
+                <span class="status ${c.status}">${c.status}</span>
+            </div>
+            <div class="complaint-body">
+                <img src="${c.photo}" alt="Complaint Photo" onerror="this.onerror = null;">
+                <div class="complaint-details">
+                    <p><strong>Description:</strong> ${c.description}</p>
+                    <p><strong>Date:</strong> ${c.date}</p>
+                    <p><strong>Location:</strong> ${c.location.lat.toFixed(4)}, ${c.location.lng.toFixed(4)}</p>
+                    ${c.assignedTo ? `<p><strong>Assigned To:</strong> ${c.assignedTo}</p>` : ""}
+                    ${c.resolvedDate ? `<p><strong>Resolved Date:</strong> ${c.resolvedDate}</p>` : ""}
                 </div>
             </div>
-        `;
-    });
-    
-    complaintsContainer.innerHTML = html;
+        </div>
+    `).join('');
 }
 
-// Admin Portal Functions
+// ============================
+// ADMIN PORTAL
+// ============================
 function initAdminPortal() {
-    // Display all complaints
     displayAllComplaints();
-    
-    // Handle complaint assignment
-    document.addEventListener('click', function(e) {
-        if (e.target && e.target.classList.contains('assign-btn')) {
-            const complaintId = parseInt(e.target.getAttribute('data-id'));
-            const vehicleSelect = document.getElementById(`vehicle-select-${complaintId}`);
-            const vehicleId = vehicleSelect.value;
-            
-            // Update complaint status
-            const complaint = window.complaintData.find(c => c.id === complaintId);
+
+    document.addEventListener('click', e => {
+        if (e.target.classList.contains('assign-btn')) {
+            const id = parseInt(e.target.dataset.id);
+            const select = document.getElementById(`vehicle-select-${id}`);
+            const vehicleId = select.value;
+            const complaint = window.complaintData.find(c => c.id === id);
+
             if (complaint) {
                 complaint.status = "assigned";
                 complaint.assignedTo = vehicleId;
-                
-                // Update display
                 displayAllComplaints();
-                
-                // Show success message
-                alert(`Complaint #${complaintId} assigned to ${vehicleId}`);
+                notify(`Complaint #${id} assigned to ${vehicleId} 🚛`);
             }
         }
     });
 }
 
 function displayAllComplaints() {
-    const complaintsTable = document.getElementById('complaints-table');
-    if (!complaintsTable) return;
-    
-    let html = `
-        <table>
+    const container = document.getElementById('complaints-table');
+    if (!container) return;
+
+    container.innerHTML = `
+        <table class="hidden">
             <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Photo</th>
-                    <th>Description</th>
-                    <th>Location</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
+                <tr><th>ID</th><th>Photo</th><th>Description</th><th>Location</th><th>Date</th><th>Status</th><th>Action</th></tr>
             </thead>
             <tbody>
-    `;
-    
-    window.complaintData.forEach(complaint => {
-        const statusClass = complaint.status.toLowerCase();
-        
-        html += `
-            <tr>
-                <td>#${complaint.id}</td>
-                <td><img src="${complaint.photo}" alt="Complaint" class="thumbnail" onerror="this.src='images/placeholder.jpg'"></td>
-                <td>${complaint.description}</td>
-                <td>${complaint.location.lat.toFixed(4)}, ${complaint.location.lng.toFixed(4)}</td>
-                <td>${complaint.date}</td>
-                <td><span class="status ${statusClass}">${complaint.status}</span></td>
-                <td>
-        `;
-        
-        if (complaint.status === "pending") {
-            html += `
-                <select id="vehicle-select-${complaint.id}" class="vehicle-select">
-                    ${window.vehicleData.map(v => `<option value="${v.id}">${v.id} (${v.status})</option>`).join('')}
-                </select>
-                <button class="btn primary assign-btn" data-id="${complaint.id}">Assign</button>
-            `;
-        } else if (complaint.status === "assigned") {
-            html += `<p>Assigned to: ${complaint.assignedTo}</p>`;
-        } else {
-            html += `<p>Resolved on: ${complaint.resolvedDate}</p>`;
-        }
-        
-        html += `
-                </td>
-            </tr>
-        `;
-    });
-    
-    html += `
+                ${window.complaintData.map(c => `
+                    <tr>
+                        <td>#${c.id}</td>
+                        <td><img src="${c.photo}" class="thumbnail" onerror="this.onerror=null;"></td>
+                        <td>${c.description}</td>
+                        <td>${c.location.lat.toFixed(4)}, ${c.location.lng.toFixed(4)}</td>
+                        <td>${c.date}</td>
+                        <td><span class="status ${c.status}">${c.status}</span></td>
+                        <td>
+                            ${c.status === "pending" ? `
+                                <select id="vehicle-select-${c.id}">
+                                    ${window.vehicleData.filter(v => v.status !== "maintenance")
+                                        .map(v => `<option value="${v.id}">${v.id} (${v.status})</option>`).join("")}
+                                </select>
+                                <button class="btn primary assign-btn" data-id="${c.id}">Assign</button>
+                            ` : c.status === "assigned" ? `<p>Assigned to: ${c.assignedTo}</p>` : `<p>Resolved on: ${c.resolvedDate}</p>`}
+                        </td>
+                    </tr>
+                `).join('')}
             </tbody>
         </table>
     `;
-    
-    complaintsTable.innerHTML = html;
 }
 
-// Vehicle Portal Functions
+// ============================
+// VEHICLE PORTAL
+// ============================
 function initVehiclePortal() {
-    // Display assigned complaints
     displayAssignedComplaints();
-    
-    // Handle complaint resolution
-    document.addEventListener('click', function(e) {
-        if (e.target && e.target.classList.contains('resolve-btn')) {
-            const complaintId = parseInt(e.target.getAttribute('data-id'));
-            
-            // Update complaint status
-            const complaint = window.complaintData.find(c => c.id === complaintId);
+
+    document.addEventListener('click', e => {
+        if (e.target.classList.contains('resolve-btn')) {
+            const id = parseInt(e.target.dataset.id);
+            const complaint = window.complaintData.find(c => c.id === id);
+
             if (complaint) {
                 complaint.status = "resolved";
                 complaint.resolvedDate = new Date().toISOString().split('T')[0];
-                complaint.resolvedPhoto = "images/resolved1.jpg"; // Placeholder
-                
-                // Update display
+                complaint.resolvedPhoto = "images/resolved1.jpg";
                 displayAssignedComplaints();
-                
-                // Show success message
-                alert(`Complaint #${complaintId} marked as resolved`);
+                notify(`Complaint #${id} marked as resolved ✅`);
             }
         }
     });
 }
 
 function displayAssignedComplaints() {
-    const assignedContainer = document.getElementById('assigned-complaints');
-    if (!assignedContainer) return;
-    
-    // Filter assigned complaints (in a real app, this would be filtered by the current vehicle ID)
-    const assignedComplaints = window.complaintData.filter(c => c.status === "assigned");
-    
-    let html = '';
-    
-    if (assignedComplaints.length === 0) {
-        html = '<div class="card"><p>No complaints assigned currently.</p></div>';
-    } else {
-        assignedComplaints.forEach(complaint => {
-            html += `
-                <div class="card complaint-card">
-                    <div class="complaint-header">
-                        <h3>Complaint #${complaint.id}</h3>
-                        <span class="status assigned">Assigned</span>
-                    </div>
-                    <div class="complaint-body">
-                        <div class="complaint-image">
-                            <img src="${complaint.photo}" alt="Complaint Photo" onerror="this.src='images/placeholder.jpg'">
-                        </div>
-                        <div class="complaint-details">
-                            <p><strong>Description:</strong> ${complaint.description}</p>
-                            <p><strong>Date:</strong> ${complaint.date}</p>
-                            <p><strong>Location:</strong> ${complaint.location.lat.toFixed(4)}, ${complaint.location.lng.toFixed(4)}</p>
-                            <p><strong>Assigned To:</strong> ${complaint.assignedTo}</p>
-                            
-                            <div class="form-group">
-                                <label for="after-photo-${complaint.id}">Upload After-Photo:</label>
-                                <input type="file" id="after-photo-${complaint.id}" accept="image/*">
-                            </div>
-                            
-                            <button class="btn primary resolve-btn" data-id="${complaint.id}">Mark as Resolved</button>
-                        </div>
-                    </div>
+    const container = document.getElementById('assigned-complaints');
+    if (!container) return;
+
+    const assigned = window.complaintData.filter(c => c.status === "assigned");
+    container.innerHTML = assigned.length ? assigned.map(c => `
+        <div class="card complaint-card hidden">
+            <div class="complaint-header">
+                <h3>Complaint #${c.id}</h3>
+                <span class="status assigned">Assigned</span>
+            </div>
+            <div class="complaint-body">
+                <img src="${c.photo}" onerror="this.onerror= null;">
+                <div class="complaint-details">
+                    <p><strong>Description:</strong> ${c.description}</p>
+                    <p><strong>Date:</strong> ${c.date}</p>
+                    <p><strong>Location:</strong> ${c.location.lat.toFixed(4)}, ${c.location.lng.toFixed(4)}</p>
+                    <p><strong>Assigned To:</strong> ${c.assignedTo}</p>
+                    <input type="file" accept="image/*">
+                    <button class="btn primary resolve-btn" data-id="${c.id}">Mark as Resolved</button>
                 </div>
-            `;
+            </div>
+        </div>
+    `).join('') : `<div class="card"><p>No complaints assigned currently.</p></div>`;
+}
+
+// ============================
+// UTILITIES
+// ============================
+function notify(message, isError = false) {
+    const box = document.createElement('div');
+    box.className = `notify ${isError ? 'error' : 'success'} hidden`;
+    box.textContent = message;
+    document.body.appendChild(box);
+    setTimeout(() => box.classList.remove('hidden'), 50);
+    setTimeout(() => box.remove(), 3000);
+}
+
+// ============================
+// SCROLL ANIMATIONS
+// ============================
+function initScrollAnimations() {
+    const elements = document.querySelectorAll('.feature-card, .complaint-card, table, .card');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
         });
-    }
-    
-    assignedContainer.innerHTML = html;
+    }, { threshold: 0.2 });
+
+    elements.forEach(el => observer.observe(el));
+}
+
+// ============================
+// SCROLL TO TOP BUTTON
+// ============================
+function initScrollToTop() {
+    const btn = document.createElement('button');
+    btn.className = 'scroll-top hidden';
+    btn.innerHTML = '<i class="fas fa-arrow-up"></i>';
+    document.body.appendChild(btn);
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            btn.classList.remove('hidden');
+        } else {
+            btn.classList.add('hidden');
+        }
+    });
+
+    btn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
 }

@@ -1,0 +1,146 @@
+/* ================================
+   Citizen Portal - My Complaints
+================================= */
+.my-complaints {
+    padding: 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+}
+
+/* Complaint Card */
+.complaint-card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    animation: fadeIn 0.6s ease-in;
+}
+
+.complaint-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+}
+
+/* Complaint Image */
+.complaint-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+/* Card Content */
+.complaint-card .content {
+    padding: 1.2rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.complaint-card h3 {
+    font-size: 1.1rem;
+    margin: 0 0 0.6rem;
+    color: #111827;
+    font-weight: 600;
+}
+
+.complaint-card p {
+    font-size: 0.9rem;
+    color: #4b5563;
+    line-height: 1.4;
+    margin-bottom: 0.8rem;
+}
+
+/* Metadata (Date, ID etc.) */
+.complaint-meta {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-bottom: 0.6rem;
+}
+
+/* Status Labels */
+.status {
+    display: inline-block;
+    padding: 0.4rem 0.9rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    margin-top: auto;
+    width: fit-content;
+}
+
+.status.pending {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.status.in-progress {
+    background: #fef9c3;
+    color: #92400e;
+}
+
+.status.resolved {
+    background: #dcfce7;
+    color: #166534;
+}
+
+/* Action Buttons */
+.complaint-card .actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.complaint-card button {
+    padding: 0.45rem 0.9rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.complaint-card button:hover {
+    transform: translateY(-2px);
+}
+
+/* Primary Button */
+.complaint-card .view-btn {
+    background: var(--primary);
+    color: white;
+}
+
+.complaint-card .view-btn:hover {
+    background: var(--secondary);
+}
+
+/* Secondary (Cancel/Delete) */
+.complaint-card .cancel-btn {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.complaint-card .cancel-btn:hover {
+    background: #e5e7eb;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .my-complaints {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+
+    .complaint-card img {
+        height: 150px;
+    }
+}

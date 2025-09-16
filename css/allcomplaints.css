@@ -1,0 +1,132 @@
+/* ============================
+   Admin Portal - All Complaints Table
+============================ */
+#complaints-table {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow-x: auto; /* Mobile scroll support */
+}
+
+#complaints-table table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    animation: fadeIn 0.8s ease-in;
+}
+
+#complaints-table thead {
+    background: var(--primary);
+    color: white;
+}
+
+#complaints-table th,
+#complaints-table td {
+    padding: 1rem;
+    text-align: left;
+    font-size: 0.95rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+#complaints-table th {
+    font-weight: 600;
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+}
+
+#complaints-table tbody tr:hover {
+    background: #f9fafb;
+    transition: background 0.3s ease;
+}
+
+/* Complaint photo thumbnails */
+#complaints-table img.thumbnail {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    object-fit: cover;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease;
+}
+
+#complaints-table img.thumbnail:hover {
+    transform: scale(1.05);
+}
+
+/* Status labels */
+.status {
+    display: inline-block;
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    letter-spacing: 0.3px;
+}
+
+.status.pending {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.status.assigned {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status.resolved {
+    background: #dcfce7;
+    color: #166534;
+}
+
+/* Action column */
+#complaints-table select {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    margin-right: 0.5rem;
+    outline: none;
+    transition: border 0.3s ease;
+}
+
+#complaints-table select:focus {
+    border-color: var(--primary);
+}
+
+/* Assign Button */
+#complaints-table .assign-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    background: var(--primary);
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+#complaints-table .assign-btn:hover {
+    background: var(--secondary);
+    transform: translateY(-2px);
+}
+
+/* Responsive Fix */
+@media (max-width: 768px) {
+    #complaints-table th, 
+    #complaints-table td {
+        padding: 0.7rem;
+        font-size: 0.85rem;
+    }
+
+    #complaints-table img.thumbnail {
+        width: 45px;
+        height: 45px;
+    }
+}
